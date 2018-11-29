@@ -1,54 +1,48 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
-#define MAXSHAB 17
-
-int sdvig[256];
-int shift = 0;
-
-void table( unsigned char shablon[MAXSHAB]) {
-    if (strlen(shablon) == 1)
-        for (int i = 0; i < 256; i++)
-            sdvig[i] = 1;
-    else {
-        for (int i = 0; i < 256; i++)
-            sdvig[i] = strlen(shablon);
-        for (int i = 0; i <= strlen(shablon) - 2; i++)
-            sdvig[shablon[i]] = strlen(shablon) - (i + 1);
+void fillTable(unsigned char str[],unsigned char word[]){
+    int j=strlen(word);
+    for(int i=0; i<strlen(word)-1;i++){
+        int c=word[i];
+        str[c]=j-1-i;
     }
 }
 
-void vhod( unsigned char shablon[MAXSHAB],  unsigned char inp[MAXSHAB], int blink) {
-    int l = strlen(shablon), j = 0;
-    j = l;
-    if (inp[j - 1] != shablon[j - 1])
-        printf("%d ", j + blink);
-    else
-        while ((j != 0) && (inp[j - 1] == shablon[j - 1])) {
-            printf("%d ", j + blink);
-            j--;
-            if (j != 0)
-                if (inp[j - 1] != shablon[j - 1])
-                    printf("%d ", j + blink);
+int findString( unsigned char strASCII[], unsigned char str[], unsigned char word[], int ind,int sdvig){
+
+    int i=strlen(word)-1,j=i;
+
+    while (i < strlen(str)){
+        int k=j,l=i;
+        printf("%d ", i+1+ind);
+        while((k>0) && (str[l]==word[k])){
+            k--;
+            l--;
+            printf("%d ",l+1 + ind);
         }
-    shift = sdvig[inp[l - 1]];
+        sdvig=strASCII[str[i]];
+        i+=strASCII[str[i]];
+    }
+
+    return sdvig;
 }
 
-int main()
-{
-    unsigned char  shablon[MAXSHAB] = { 0 }, inp[MAXSHAB] = { 0 };
-    char k;
-    int i = 0, blink = 0;
-    gets(shablon);
-    table(shablon);
+int main() {
+    unsigned char str[255]={0},word[255]={0};
+    unsigned char strASCII[255]={0};
+    gets(word);
+    memset(strASCII,strlen(word),255);
+    fillTable(strASCII,word);
+    int count = 0, ind = 0,sdvig=0;
+    char k = 0;
+
     while ((k = getchar()) != EOF){
-        inp[i] = k;
-        i++;
-        if (i == strlen(shablon)){
-            vhod (shablon, inp, blink);
-            blink += shift;
-            memmove (inp, inp + shift, strlen(inp) - shift);
-            i -= shift;
+        str[count++] = k;
+        if (count == strlen(word)){
+            sdvig=findString(strASCII,str,word,ind,sdvig);
+            ind+=sdvig;
+            memmove(str,str+sdvig,strlen(str)-sdvig);
+            count-=sdvig;
         }
     }
     return 0;
