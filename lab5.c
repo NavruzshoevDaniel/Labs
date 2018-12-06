@@ -30,7 +30,7 @@ void insert(int count, int *arr, int  i){
 
 void shifdown(int *arr,int i,int N){
     int j=i;
-   while ((2*i+1) < N){
+    while ((2*i+1) < N){
 
         if(arr[2*i+1]>arr[j])
             j=2*i+1;
@@ -44,18 +44,18 @@ void shifdown(int *arr,int i,int N){
         i=j;
 
 
-   }
+    }
 }
 
 
 
 int main() {
-    long N;
+    long N=0;
     int count, *arr;
-	if (N <= 0)
-		return 0;
+    if (N <= 0)
+        return 0;
     scanf("%ld", &N);
-	arr = (int*)malloc(N * sizeof(int));
+    arr = (int*)malloc(N * sizeof(int));
     scanf("%d",&arr[0] );
     for (int i = 1; i < N; i++){
         scanf("%d", &count);
@@ -70,5 +70,6 @@ int main() {
         l--;
     }
     outPut(arr,N);
+    free(arr);
     return 0;
 }
