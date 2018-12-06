@@ -30,20 +30,28 @@ int findString( unsigned char strASCII[], unsigned char str[], unsigned char wor
 int main() {
     unsigned char str[255]={0},word[255]={0};
     unsigned char strASCII[255]={0};
-    gets(word);
-    memset(strASCII,strlen(word),255);
+    fgets(word,sizeof(word),stdin);
+    word[strlen(word) - 1] = 0;
+    if (strlen(word) > 0)
+      memset(strASCII,strlen(word),255);
     fillTable(strASCII,word);
     int count = 0, ind = 0,sdvig=0;
-    char k = 0;
+    fgets(str,strlen(word)+1,stdin);
 
-    while ((k = getchar()) != EOF){
-        str[count++] = k;
-        if (count == strlen(word)){
+        if (strlen(str) == strlen(word)){
             sdvig=findString(strASCII,str,word,ind,sdvig);
             ind+=sdvig;
             memmove(str,str+sdvig,strlen(str)-sdvig);
-            count-=sdvig;
+
         }
+    while(1){
+        fgets(str+(strlen(str)-sdvig),sdvig+1,stdin);
+        if(!feof(stdin)){
+            sdvig=findString(strASCII,str,word,ind,sdvig);
+            ind+=sdvig;
+            memmove(str,str+sdvig,strlen(str)-sdvig);
+        } else
+            return 0;
     }
     return 0;
 }
