@@ -35,7 +35,6 @@ void createMas(char str[10], int mas[],int len){
 
 void outputMas(int mas[],int n){
     for (int i=0; i<n;i++){
-        int c=mas[i];
         printf("%d",mas[i]);
     }
 }
@@ -92,7 +91,7 @@ void functionDecstr(int mas[],int len,int p){
 
 int main() {
     int p;
-    char str[10];
+    char str[11];
     scanf("%s",str);
     int len = strlen(str);
     int mas[len];
