@@ -52,8 +52,6 @@ void shifdown(int *arr,int i,int N){
 int main() {
     long N=0;
     int count, *arr;
-    if (N <= 0)
-        return 0;
     scanf("%ld", &N);
     arr = (int*)malloc(N * sizeof(int));
     scanf("%d",&arr[0] );
