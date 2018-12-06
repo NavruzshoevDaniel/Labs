@@ -32,6 +32,8 @@ void quickSort(int arr[], int l, int r){
 int main() {
     int N=0;
     scanf("%d",&N);
+    if (N==0)
+        return 0;
     int arr[N];
      for (int i=0;i < N; i++){
          scanf("%d",&arr[i]);
