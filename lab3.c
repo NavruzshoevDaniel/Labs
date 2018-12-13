@@ -33,8 +33,8 @@ int main() {
     int l = strlen(word);
     printf("%ld ", hashword);
     long step = power[ l - 1];
-    char buf[1000] = { 0 };
-    while (fgets(buf + len, 1000, stdin)) {
+    char buf[100] = { 0 };
+    while (fgets(buf + len, 100, stdin)) {
         int i = 0, j = 0;
         hashcount = 0;
         while (i != (strlen(buf))) {
