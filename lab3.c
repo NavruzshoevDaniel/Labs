@@ -56,7 +56,7 @@ int main() {
             ind++;
             i++;
         }
-        memmove(buf, buf + (strlen(buf) - (l - 1)), 100 - l);
+        memmove(buf, buf + (strlen(buf) - (l - 1)), l-1);
     }
 
 
