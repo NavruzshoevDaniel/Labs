@@ -32,6 +32,7 @@ int stkTop(struct stack *stk) {
     else{
         printf("syntax error");
         exit(0);
+        return 0;
     }
 }
 
