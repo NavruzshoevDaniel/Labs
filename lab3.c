@@ -34,7 +34,7 @@ int main() {
     printf("%ld ", hashword);
     long step = power[ l - 1];
     char buf[100] = { 0 };
-    while (fgets(buf + len, 100, stdin)) {
+    while (fgets(buf + len, 100-l, stdin)) {
         const int dlina=strlen(buf);
         int i = 0, j = 0;
         hashcount = 0;
@@ -57,7 +57,7 @@ int main() {
             ind++;
             i++;
         }
-        memmove(buf, buf + (dlina - (l - 1)), l-1);
+        memmove(buf, buf + (dlina - (l - 1)), 100-(dlina - (l - 1)));
     }
 
 
