@@ -3,10 +3,10 @@
 #include <math.h>
 
 void check(unsigned char word[], unsigned char str[], int ind, int a) {
-
-    for (int i = 0; i < strlen(word); i++) {
-        printf("%d ", ind + i - strlen(word) + 1);
-        if (word[i] != str[i + a - strlen(word)])
+    int k=strlen(word);
+    for (int i = 0; i < k; i++) {
+        printf("%d ", ind + i - k + 1);
+        if (word[i] != str[i + a - k])
             break;
     }
 }
