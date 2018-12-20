@@ -57,7 +57,7 @@ int main() {
             ind++;
             i++;
         }
-        memmove(buf, buf + (dlina - (l - 1)), 100-(dlina - (l - 1)));
+        memmove(buf, buf + (dlina - (l - 1)), l - 1);
     }
 
 
