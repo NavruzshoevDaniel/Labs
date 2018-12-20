@@ -29,8 +29,10 @@ int pop(struct stack *stk) {
 int stkTop(struct stack *stk) {
     if((stk->top) > 0)
         return( stk->elem[stk->top-1]);
-    else
+    else{
         printf("syntax error");
+        exit(0);
+    }
 }
 
 int isempty(struct stack *stk) {
