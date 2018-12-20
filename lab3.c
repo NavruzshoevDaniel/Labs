@@ -34,8 +34,8 @@ int main() {
     printf("%ld ", hashword);
     long step = power[ l - 1];
     char buf[100] = { 0 };
-    const int dlina=strlen(buf);
     while (fgets(buf + len, 100, stdin)) {
+        const int dlina=strlen(buf);
         int i = 0, j = 0;
         hashcount = 0;
         while (i != (dlina)) {
