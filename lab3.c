@@ -3,7 +3,7 @@
 #include <math.h>
 
 void check(unsigned char word[], unsigned char str[], int ind, int a) {
-    int k=strlen(word);
+    const int k=strlen(word);
     for (int i = 0; i < k; i++) {
         printf("%d ", ind + i - k + 1);
         if (word[i] != str[i + a - k])
@@ -34,7 +34,7 @@ int main() {
     printf("%ld ", hashword);
     long step = power[ l - 1];
     char buf[100] = { 0 };
-    int dlina=strlen(buf);
+    const int dlina=strlen(buf);
     while (fgets(buf + len, 100, stdin)) {
         int i = 0, j = 0;
         hashcount = 0;
