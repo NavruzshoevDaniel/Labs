@@ -134,6 +134,7 @@ int main(int argc, char **argv) {
             case 'i':
                 di=1;
                 i=1;
+                break;
             case '?': printf("Use: --help\n");
         }
 
