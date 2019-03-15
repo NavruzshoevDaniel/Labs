@@ -118,8 +118,8 @@ int main() {
     fscanf(in, "%d", &rebr);
     masGr = malloc(rebr * sizeof(struct graph));
     status = malloc((versh + 1) * sizeof(int));
-    rank = malloc(versh + 1 * sizeof(int));
-    isfill = malloc(versh + 1 * sizeof(int));
+    rank = malloc((versh + 1) * sizeof(int));
+    isfill = malloc((versh + 1) * sizeof(int));
     checkInput(versh, rebr, in, out);
     if ((versh == 1) && (rebr == 0)) {
         fclose(in);
