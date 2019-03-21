@@ -129,12 +129,11 @@ int main() {
         switch (err) {
             case 0:
                 masGr[j].start = letter;
-                isfill[masGr[j].start] = 1;
                 err++;
                 break;
             case 1:
                 masGr[j].end = letter;
-                isfill[masGr[j].end] = 1;
+                
                 err++;
                 break;
             case 2:
@@ -143,6 +142,8 @@ int main() {
                 break;
         }
         if (err == 0) {
+            isfill[masGr[j].end] = 1;
+            isfill[masGr[j].start] = 1;
             checkInputRebr(masGr, versh, j, in, out);
             j++;
         }
