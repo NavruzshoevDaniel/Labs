@@ -65,22 +65,34 @@ void crascal(int *status, struct graph *gr, int versh, int rebr, int *rank, FILE
   }
 }
 
-void checkInputRebr(struct graph *gr, int ver, int i, FILE *in, FILE *out) {
+void checkInputRebr(struct graph *gr, int ver, int i, FILE *in, FILE *out, int *rank, int *isfill, int *status) {
 
   if (gr[i].start < 1 || gr[i].start > ver) {
     fprintf(out, "bad vertex");
+    free(status);
+    free(rank);
+    free(isfill);
+    free(gr);
     fclose(in);
     fclose(out);
     exit(0);
   }
   if (gr[i].end < 1 || gr[i].end > ver) {
     fprintf(out, "bad vertex");
+    free(status);
+    free(rank);
+    free(isfill);
+    free(gr);
     fclose(in);
     fclose(out);
     exit(0);
   }
   if (gr[i].weight < 0 || gr[i].weight > INT_MAX) {
     fprintf(out, "bad length");
+    free(status);
+    free(rank);
+    free(isfill);
+    free(gr);
     fclose(in);
     fclose(out);
     exit(0);
@@ -116,11 +128,12 @@ int main() {
   int *status = NULL, *rank = NULL, *isfill = NULL;
   fscanf(in, "%d", &versh);
   fscanf(in, "%d", &rebr);
+  checkInput(versh, rebr, in, out);
   masGr = malloc(rebr * sizeof(struct graph));
   status = malloc((versh + 1) * sizeof(int));
   rank = malloc((versh + 1) * sizeof(int));
   isfill = malloc((versh + 1) * sizeof(int));
-  checkInput(versh, rebr, in, out);
+
   if ((versh == 1) && (rebr == 0)) {
     fclose(in);
     exit(0);
@@ -138,9 +151,9 @@ int main() {
         break;
     }
     if (err == 0) {
-      checkInputRebr(masGr, versh, j, in, out);
-      isfill[masGr[j].start] = 1;
+      checkInputRebr(masGr, versh, j, in, out, rank, isfill, status);
       isfill[masGr[j].end] = 1;
+      isfill[masGr[j].start] = 1;
       j++;
     }
   }
@@ -160,6 +173,9 @@ int main() {
   }
   quickSort(masGr, 0, rebr - 1);
   crascal(status, masGr, versh, rebr, rank, out);
+  free(status);
+  free(rank);
+  free(isfill);
   free(masGr);
   fclose(in);
   fclose(out);
