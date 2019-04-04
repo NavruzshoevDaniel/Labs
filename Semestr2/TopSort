@@ -1,0 +1,150 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <memory.h>
+
+typedef enum { WHITE, GREY, BLACK } color;
+
+void DFS(short *const *mas, const short *size, color *status, int now, short *stk, short *c, FILE *in, FILE *out) {
+  status[now - 1] = GREY;
+  for (int i = 0; i < size[now - 1]; i++) {
+    if (status[mas[now - 1][i] - 1] == WHITE)
+      DFS(mas, size, status, mas[now - 1][i], stk, c, in, out);
+    if (status[mas[now - 1][i] - 1] == GREY) {
+      fprintf(out, "impossible to sort");
+      fclose(in);
+      fclose(out);
+      exit(0);
+    }
+  }
+  status[now - 1] = BLACK;
+  stk[(*c)++] = now;
+}
+
+void doDFS(short *const *mas,
+           const short *size,
+           short versh,
+           color *status,
+           short *stk,
+           short *c,
+           FILE *in,
+           FILE *out) {
+  for (int i = 0; i < versh; i++) {
+    if (status[i] == WHITE)
+      DFS(mas, size, status, i + 1, stk, c, in, out);
+  }
+}
+
+void checkInputRebr(short start, short end, short ver, FILE *in, FILE *out) {
+
+  if (start < 1 || start > ver) {
+    fprintf(out, "bad vertex");
+    fclose(in);
+    fclose(out);
+    exit(0);
+  }
+  if (end < 1 || end > ver) {
+    fprintf(out, "bad vertex");
+    fclose(in);
+    fclose(out);
+    exit(0);
+  }
+}
+
+void checkInput(short ver, int rebr, FILE *in, FILE *out) {
+  if ((ver < 0) || (ver > 1000)) {
+    fprintf(out, "bad number of vertices");
+    fclose(in);
+    fclose(out);
+    exit(0);
+  }
+  if ((rebr < 0) || (rebr > (ver * (ver - 1) / 2))) {
+    fprintf(out, "bad number of edges");
+    fclose(in);
+    fclose(out);
+    exit(0);
+  }
+  if (ver == 0) {
+    fprintf(out, "impossible to sort");
+    fclose(in);
+    fclose(out);
+    exit(0);
+  }
+}
+
+void clearMas(short **mas, const int ver) {
+    for (int j = 0; j < ver; j++) {
+      free(mas[j]);
+      mas[j]=NULL;
+    }
+}
+
+int main() {
+  FILE *in = fopen("in.txt", "r");
+  FILE *out = fopen("out.txt", "w");
+  int rebr = -1, j = 0, err = 0;
+  int versh = -1, letter = 0, start = 0, end = 0;
+  fscanf(in, "%d", &versh);
+  fscanf(in, "%d", &rebr);
+  if ((rebr == -1) || (versh == -1)) {
+    fprintf(out, "bad number of lines");
+    fclose(in);
+    fclose(out);
+    exit(0);
+  }
+  short *mas[versh];
+  memset(mas, 0, sizeof(mas));
+  short arstack[versh];
+  memset(arstack, 0, sizeof(arstack));
+  short cur = 0;
+  color status[versh];
+  short size[versh];
+  memset(size, 0, sizeof(size));
+  memset(status, 0, sizeof(status));
+
+
+  checkInput(versh, rebr, in, out);
+  if ((versh == 1) && (rebr == 0)) {
+    fclose(in);
+    exit(0);
+  }
+  while ((fscanf(in, "%d", &letter)) != EOF) {
+    switch (err) {
+      case 0:start = letter;
+        err++;
+        break;
+      case 1:end = letter;
+        err = 0;
+        break;
+    }
+    if (err == 0) {
+      checkInputRebr(start, end, versh, in, out);
+      short *newmas = realloc(mas[start - 1], sizeof(short *) * (size[start - 1] + 1));
+      if (newmas != NULL)
+        mas[start - 1] = newmas;
+      else {
+        fclose(in);
+        fclose(out);
+      }
+      mas[start - 1][size[start - 1]] = end;
+      size[start - 1]++;
+      status[start - 1] = WHITE;
+      status[end - 1] = WHITE;
+      j++;
+    }
+  }
+  if (j != rebr) {
+    fprintf(out, "bad number of lines");
+    fclose(in);
+    fclose(out);
+    exit(0);
+  }
+  doDFS(mas, size, versh, status, arstack, &cur, in, out);
+  while (cur) {
+    fprintf(out, "%d ", arstack[--cur]);
+  }
+  clearMas(mas, versh);
+
+  fclose(in);
+  fclose(out);
+  return 0;
+}
