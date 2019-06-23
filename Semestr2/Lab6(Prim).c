@@ -30,74 +30,36 @@ void quickSort(struct graph *gr, int l, int r) {
   if (i < r) quickSort(gr, i, r);
 }
 
-void checkInputRebr(struct graph *gr,
-                    int ver,
-                    int i,
-                    FILE *in,
-                    FILE *out,
-                    int *status,
-                    int *cost,
-                    int *path,
-                    int *isfill,
-                    int **masGr) {
+int checkInputRebr(struct graph *gr, int ver, int i) {
 
   if (gr[i].start < 1 || gr[i].start > ver) {
-    fprintf(out, "bad vertex");
-    free(cost);
-    free(path);
-    free(isfill);
-    free(status);
-    free(masGr);
-    fclose(in);
-    fclose(out);
-    exit(0);
+    return 1;
   }
   if (gr[i].end < 1 || gr[i].end > ver) {
-    fprintf(out, "bad vertex");
-    free(cost);
-    free(path);
-    free(isfill);
-    free(status);
-    free(masGr);
-    fclose(in);
-    fclose(out);
-    exit(0);
+    return 1;
   }
   if (gr[i].weight < 0 || gr[i].weight > INT_MAX) {
-    fprintf(out, "bad length");
-    free(cost);
-    free(path);
-    free(isfill);
-    free(status);
-    free(masGr);
-    fclose(in);
-    fclose(out);
-    exit(0);
+    return 2;
   }
 }
 
-void checkInput(int ver, int rebr, FILE *in, FILE *out) {
+int checkInput(int ver, int rebr) {
   if ((ver < 0) || (ver > 5000)) {
-    fprintf(out, "bad number of vertices");
-    fclose(in);
-    fclose(out);
-    exit(0);
+    return 1;
   }
   if ((rebr < 0) || (rebr > (ver * (ver + 1) / 2))) {
-    fprintf(out, "bad number of edges");
-    fclose(in);
-    fclose(out);
-    exit(0);
+    return 2;
   }
   if (ver == 0) {
-    fprintf(out, "no spanning tree");
-    fclose(in);
-    fclose(out);
-    exit(0);
+    return 3;
   }
 }
 
-void prim(struct graph *g, int *st, int *cost, int *path, int versh, int rebr, FILE *out) {
+void prim(struct graph *g, int versh, int rebr, FILE *out) {
+  int *st = NULL, *cost = NULL, *path = NULL;
+  st = malloc((versh + 1) * sizeof(int));
+  cost = malloc((versh + 1) * sizeof(int));
+  path = malloc((versh + 1) * sizeof(int));
   int j = 0;
   for (int i = 0; i <= versh; i++) {
     cost[i] = INT_MAX;
@@ -134,7 +96,9 @@ void prim(struct graph *g, int *st, int *cost, int *path, int versh, int rebr, F
     }
 
   }
-
+  free(cost);
+  free(path);
+  free(st);
 }
 
 int main() {
@@ -142,18 +106,27 @@ int main() {
   FILE *out = fopen("out.txt", "w");
   struct graph *masGr = NULL;
   int versh, rebr, err = 0, j = 0, letter = 0;
-  int *status = NULL, *isfill = NULL, *cost = NULL, *path = NULL;
+  int *isfill = NULL;
   fscanf(in, "%d", &versh);
   fscanf(in, "%d", &rebr);
-  checkInput(versh, rebr, in, out);
+  int errorCheck = 0;
+  errorCheck = checkInput(versh, rebr);
+
+  if (errorCheck == 1) {
+    fprintf(out, "bad number of vertices");
+    goto fileclose;
+  } else if (errorCheck == 2) {
+    fprintf(out, "bad number of edges");
+    goto fileclose;
+  } else if (errorCheck == 3) {
+    fprintf(out, "no spanning tree");
+    goto fileclose;
+  }
+
   masGr = malloc(rebr * sizeof(struct graph));
-  status = malloc((versh + 1) * sizeof(int));
-  cost = malloc((versh + 1) * sizeof(int));
-  path = malloc((versh + 1) * sizeof(int));
   isfill = malloc((versh + 1) * sizeof(int));
   if ((versh == 1) && (rebr == 0)) {
-    fclose(in);
-    exit(0);
+    goto end;
   }
 
   while ((fscanf(in, "%d", &letter)) != EOF) {
@@ -169,7 +142,16 @@ int main() {
         break;
     }
     if (err == 0) {
-      checkInputRebr(masGr, versh, j, in, out, status, cost, path, isfill, masGr);
+      errorCheck=0;
+      errorCheck = checkInputRebr(masGr, versh, j);
+
+      if (errorCheck == 1) {
+        fprintf(out, "bad vertex");
+        goto end;
+      } else if (errorCheck == 2) {
+        fprintf(out, "bad length");
+        goto end;
+      }
       isfill[masGr[j].start] = 1;
       isfill[masGr[j].end] = 1;
       j++;
@@ -177,35 +159,20 @@ int main() {
   }
   if (j != rebr) {
     fprintf(out, "bad number of lines");
-    free(cost);
-    free(path);
-    free(isfill);
-    free(status);
-    free(masGr);
-    fclose(in);
-    fclose(out);
-    exit(0);
+    goto end;
   }
   for (int i = 1; i <= versh; i++) {
     if (isfill[i] != 1) {
       fprintf(out, "no spanning tree");
-      free(cost);
-      free(path);
-      free(isfill);
-      free(status);
-      free(masGr);
-      fclose(in);
-      fclose(out);
-      exit(0);
+      goto end;
     }
   }
   quickSort(masGr, 0, rebr - 1);
-  prim(masGr, status, cost, path, versh, rebr, out);
-  free(cost);
-  free(path);
+  prim(masGr, versh, rebr, out);
+  end:
   free(isfill);
-  free(status);
   free(masGr);
+  fileclose:
   fclose(in);
   fclose(out);
   return 0;
