@@ -41,6 +41,7 @@ int checkInputRebr(struct graph *gr, int ver, int i) {
   if (gr[i].weight < 0 || gr[i].weight > INT_MAX) {
     return 2;
   }
+  return 0;
 }
 
 int checkInput(int ver, int rebr) {
@@ -53,6 +54,7 @@ int checkInput(int ver, int rebr) {
   if (ver == 0) {
     return 3;
   }
+  return 0;
 }
 
 void prim(struct graph *g, int versh, int rebr, FILE *out) {
@@ -142,7 +144,6 @@ int main() {
         break;
     }
     if (err == 0) {
-      errorCheck=0;
       errorCheck = checkInputRebr(masGr, versh, j);
 
       if (errorCheck == 1) {
